@@ -2,7 +2,7 @@
     "name":"Teach2u",
     "builds":[{
         "src":"*py",
-        "use":"@liudonghua123/now-flask"
+        "use":"@vercel/python"
     }],
     "routes":[
         {"src":"(.*)", "dest":"run.py"}
