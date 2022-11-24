@@ -1,6 +1,5 @@
 {
     "name":"Teach2u",
-    "versions":2,
     "builds":[{
         "src":"*py",
         "use":"@liudonghua123/now-flask"
