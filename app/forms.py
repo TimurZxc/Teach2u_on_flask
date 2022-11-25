@@ -36,7 +36,8 @@ class TeacherUpdateForm(FlaskForm):
     phone_number = StringField('Номер телефона', validators=[DataRequired(), Length(min=11, max=12)])
     city = StringField('Город', validators=[Length(min=0, max=80)])
     format_ = SelectField('Формат обучения', choices=[('Онлайн'), ('Оффлайн'), ('Онлайн/Оффлайн')])
-    languages = StringField('Языки обучения', validators=[Length(min=0, max=80)])
+    languages = SelectField('Формат обучения', choices=[
+                            ('Русский'), ('Английский'), ('Казахский')])    
     education = TextAreaField('Образование')
     experience = TextAreaField('Опыт')
     update = SubmitField('Обновить')
