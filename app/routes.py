@@ -195,6 +195,7 @@ def account_update():
          form.languages.data = current_user.languages
          form.education.data = current_user.education
          form.experience.data = current_user.experience
+         print(form.format_.data)
          return render_template('account-update.html', title='Account', form=form)
       else:
             if form.validate_on_submit():
@@ -208,7 +209,8 @@ def account_update():
                         current_user.languages=form.languages.data 
                         current_user.education=form.education.data 
                         current_user.experience=form.experience.data 
-
+                        current_user.format_=form.format_.data 
+                        
                         db.session.commit()
                         flash("Данные успешно изменены!", 'success')
                         return redirect(url_for('account'))
