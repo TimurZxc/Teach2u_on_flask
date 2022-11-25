@@ -1,5 +1,5 @@
 from flask import flash, redirect, render_template, session, url_for, request
-from app.forms import LoginForm, TeacherRegistrationForm, SubjectForm, EduCenterRegistrationForm, CourseForm, EduTeacher, ParentForm, StudentForm, TeacherUpdateForm
+from app.forms import LoginForm, ParentUpdateForm, StudentUpdateForm, TeacherRegistrationForm, SubjectForm, EduCenterRegistrationForm, CourseForm, EduTeacher, ParentForm, StudentForm, TeacherUpdateForm, EduCenterUpdateForm
 from app.models import Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
 from app import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
@@ -178,6 +178,8 @@ def account():
         return render_template('account.html', title='Account', courses = courses)
     elif session['type'] == 'Parent':
         return render_template('account.html', title='Account')
+    elif session['type'] == 'Student':
+        return render_template('account.html', title='Account')
 
 
 @app.route("/account-update", methods=['POST', 'GET'])
@@ -195,52 +197,107 @@ def account_update():
          form.experience.data = current_user.experience
          return render_template('account-update.html', title='Account', form=form)
       else:
-         if form.validate_on_submit:
-               current_user.email = form.email.data
-               current_user.phone_number = form.phone_number.data
-               current_user.city = form.city.data
-               current_user.format_ = form.format_.data
-               current_user.languages = form.languages.data
-               current_user.education = form.education.data
-               current_user.experience = form.experience.data
-               db.session.commit()
-               flash("Данные успешно изменены!", 'success')
-               return redirect(url_for('account'))
+            if form.validate_on_submit():
+                    email = Teacher.query.filter_by(email=form.email.data).first()
+                    phone = Teacher.query.filter_by(phone_number=form.phone_number.data).first()
+
+                    if (phone and phone.id == current_user.id) or (email and email.id == current_user.id) or (phone is None and email is None) :
+                        current_user.email=form.email.data 
+                        current_user.phone_number=form.phone_number.data 
+                        current_user.city=form.city.data 
+                        current_user.languages=form.languages.data 
+                        current_user.education=form.education.data 
+                        current_user.experience=form.experience.data 
+
+                        db.session.commit()
+                        flash("Данные успешно изменены!", 'success')
+                        return redirect(url_for('account'))
+                    else:
+                        flash("Почта или телефон уже заняты!", "danger")
+                        return redirect(url_for('account'))
+            else:
+                flash("Почта или телефон уже заняты!", "danger")
+                return redirect(url_for('account'))
+
     elif session['type'] == 'EduCenter':
-      form = EduCenterRegistrationForm()
+      form = EduCenterUpdateForm()
       if request.method == "GET":
-         form.name.data = current_user.name
          form.email.data = current_user.email
          form.phone_number.data = current_user.phone_number
          form.address.data = current_user.address
          form.description.data = current_user.description
-         return render_template('edu_account-update.html', title='Account', form=form)
+         return render_template('account-update.html', title='Account', form=form)
       elif request.method == "POST":
-         if form.validate_on_submit:
-               current_user.name=form.name.data 
-               current_user.email=form.email.data
-               current_user.phone_number=form.phone_number.data 
-               current_user.address=form.address.data 
-               current_user.description=form.description.data 
-               db.session.commit()
-               flash("Данные успешно изменены!", 'success')
-               return redirect(url_for('account'))
+        if form.validate_on_submit():
+            if form.validate_on_submit():
+                email = Educenter.query.filter_by(email=form.email.data).first()
+                phone = Educenter.query.filter_by(phone_number=form.phone_number.data).first()
+
+                if (phone and phone.id == current_user.id) or (email and email.id == current_user.id) or (phone is None and email is None) :
+                    current_user.email=form.email.data 
+                    current_user.phone_number=form.phone_number.data 
+                    current_user.address=form.address.data 
+                    current_user.description=form.description.data 
+                    
+                    db.session.commit()
+                    flash("Данные успешно изменены!", 'success')
+                    return redirect(url_for('account'))
+                else:
+                    flash("Почта или телефон уже заняты!", "danger")
+                    return redirect(url_for('account'))
+            else:
+                flash("Почта или телефон уже заняты!", "danger")
+                return redirect(url_for('account'))
+        
     elif session['type'] == 'Parent':
-      form = ParentForm()
+      form = ParentUpdateForm()
       if request.method == "GET":
-         form.first_name.data = current_user.first_name
-         form.last_name.data = current_user.last_name
          form.phone.data = current_user.phone
-         
-         return render_template('edu_account-update.html', title='Account', form=form)
+         form.email.data = current_user.email
+         return render_template('account-update.html', title='Account', form=form)
       elif request.method == "POST":
-         if form.validate_on_submit:
-               current_user.first_name=form.first_name.data 
-               current_user.phone=form.phone.data 
-               current_user.last_name=form.last_name.data 
-               db.session.commit()
-               flash("Данные успешно изменены!", 'success')
-               return redirect(url_for('account'))
+            if form.validate_on_submit():
+                email = Parent.query.filter_by(email=form.email.data).first()
+                phone = Parent.query.filter_by(phone=form.phone.data).first()
+
+                if (phone and phone.id == current_user.id) or (email and email.id == current_user.id) or (phone is None and email is None) :
+                    current_user.email=form.email.data 
+                    current_user.phone=form.phone.data 
+                    db.session.commit()
+                    flash("Данные успешно изменены!", 'success')
+                    return redirect(url_for('account'))
+                else:
+                    flash("Почта или телефон уже заняты!", "danger")
+                    return redirect(url_for('account'))
+            else:
+                flash("Почта или телефон уже заняты!", "danger")
+                return redirect(url_for('account'))
+               
+    elif session['type'] == 'Student':
+        student_form = StudentUpdateForm()
+        if request.method == "GET":
+            student_form.phone.data = current_user.phone
+            student_form.email.data = current_user.email
+            
+            return render_template('account-update.html', title='Account', student_form=student_form)
+        elif request.method == "POST":
+            if student_form.validate_on_submit():
+                email = Student.query.filter_by(email=student_form.email.data).first()
+                phone = Student.query.filter_by(phone=student_form.phone.data).first()
+
+                if (phone and phone.id == current_user.id) or (email and email.id == current_user.id) or (phone is None and email is None) :
+                    current_user.email=student_form.email.data 
+                    current_user.phone=student_form.phone.data 
+                    db.session.commit()
+                    flash("Данные успешно изменены!", 'success')
+                    return redirect(url_for('account'))
+                else:
+                    flash("Почта или телефон уже заняты!", "danger")
+                    return redirect(url_for('account'))
+            else:
+                flash("Почта или телефон уже заняты!", "danger")
+                return redirect(url_for('account'))
+
 
 
 @app.route('/account/<id>/add_subject', methods=['GET', 'POST'])
@@ -250,7 +307,7 @@ def add_subject(id):
     if request.method == "GET":
         return render_template('add_subject.html', form=form)
     else:
-        if form.validate_on_submit:
+        if form.validate_on_submit():
             subject = Subject(teacher_id=teacher.id,
                               subject_name=form.subject_name.data,
                               subject_price=form.subject_price.data,
@@ -270,7 +327,7 @@ def add_course(id):
     if request.method == "GET":
         return render_template('add_course.html', form=form)
     else:
-        if form.validate_on_submit:
+        if form.validate_on_submit():
             course = Courses(edu_center_id=edu_center.id,
                               course_name=form.course_name.data,
                               course_price=form.course_price.data,
@@ -348,7 +405,7 @@ def edit_subject(id):
         form.subject_description.data = subject.subject_description
         return render_template('add_subject.html', form=form)
     else:
-        if form.validate_on_submit:
+        if form.validate_on_submit():
             subject.subject_name = form.subject_name.data
             subject.subject_price = form.subject_price.data
             subject.subject_description = form.subject_description.data
@@ -370,7 +427,7 @@ def edit_course(course_id):
         form.course_description.data = courses.course_description
         return render_template('edit_course.html', form=form, edu_teachers=edu_teachers, course_id=course_id)
     else:
-        if form.validate_on_submit:
+        if form.validate_on_submit():
             courses.course_name = form.course_name.data
             courses.course_price = form.course_price.data
             courses.course_description = form.course_description.data
@@ -392,7 +449,7 @@ def edit_edu_teacher(id, course_id):
         edu_teacher_form.info.data = edu_teacher.info
         return render_template('edit_edu_teacher.html', edu_teacher_form=edu_teacher_form, form=form, course_id=course_id)
     else:
-        if edu_teacher_form.validate_on_submit:
+        if edu_teacher_form.validate_on_submit():
             edu_teacher.first_name = edu_teacher_form.first_name.data
             edu_teacher.last_name = edu_teacher_form.last_name.data
             edu_teacher.languages = edu_teacher_form.languages.data

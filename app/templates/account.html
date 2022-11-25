@@ -281,8 +281,45 @@
         
           <a class="edit-modal-opener" data-toggle="modal"
             data-whatever="{{ url_for('add_course', id=current_user.id) }}"
-            href="{{ url_for('add_course', id=current_user.id) }}"
+            href="#"
             style="color: white; text-decoration: none;"><button type="button" class="btn btn-primary">Добавить ребенка</button></a>
+
+
+      </div>
+      
+    </div>
+  </div>
+  </div>
+  
+</section>
+{%  elif session['type'] == 'Student' %}
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="{{ url_for('static', filename='img/default.jpg') }}" alt="avatar" class="rounded-circle img-fluid"
+              style="width: 150px;">
+            <h5 class="my-3"> {{ current_user.first_name }} {{ current_user.last_name }} </h5>
+            <p class="text-muted mb-4">
+              {{ current_user.phone }}<br />
+              {{ current_user.email }}
+            </p>
+            <div class="d-flex justify-content-center mb-2">
+              <button type="button" class="btn btn-primary"> <a href="{{url_for('account_update')}}"
+                  style="text-decoration: none; color:#ffff;">Изменить</a></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="row">
+
+      <div class="d-flex justify-content-center mb-2">
+        
+          
 
 
       </div>

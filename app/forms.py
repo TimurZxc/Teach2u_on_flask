@@ -43,18 +43,16 @@ class TeacherUpdateForm(FlaskForm):
 
     def validate_phone_number(self, phone_number):
         user = Educenter.query.filter(Educenter.phone_number==phone_number.data).first()
-        user2 = Teacher.query.filter(Teacher.phone_number==phone_number.data).first()
         user3 = Student.query.filter(Student.phone==phone_number.data).first()
         user4 = Parent.query.filter(Parent.phone==phone_number.data).first()
-        if user or user2 or user3 or user4:
+        if user or user3 or user4:
             raise ValidationError('Этот номер уже занят, попробуйте другой')
 
     def validate_email(self, email):
         email1 = Educenter.query.filter_by(email=email.data).first()
-        email2 = Teacher.query.filter_by(email=email.data).first()
         email3 = Student.query.filter_by(email=email.data).first()
         email4 = Parent.query.filter_by(email=email.data).first()
-        if email1 or email2 or email3 or email4:
+        if email1 or email3 or email4:
             raise ValidationError('Аккаунт с данной почтой уже существует')
 
         
@@ -92,7 +90,6 @@ class EduCenterRegistrationForm(FlaskForm):
     submit = SubmitField('Регистрация')
     address = StringField('Адрес', validators=[Length(min=0, max=80)])
     description = TextAreaField('Описание')
-    update = SubmitField('Обновить')
 
     def validate_phone_number(self, phone_number):
         user = Educenter.query.filter_by(
@@ -109,6 +106,31 @@ class EduCenterRegistrationForm(FlaskForm):
         email3 = Student.query.filter_by(email=email.data).first()
         email4 = Parent.query.filter_by(email=email.data).first()
         if email1 or email2 or email3 or email4:
+            raise ValidationError('Аккаунт с данной почтой уже существует')
+
+
+        
+class EduCenterUpdateForm(FlaskForm):
+    email = StringField('Электронная почта', validators=[
+                        DataRequired(), Email()])
+    phone_number = StringField('Номер телефона', validators=[
+                               DataRequired(), Length(min=11, max=12)])
+    address = StringField('Адрес', validators=[Length(min=0, max=80)])
+    description = TextAreaField('Описание')
+    update = SubmitField('Обновить')
+
+    def validate_phone_number(self, phone_number):
+        user2 = Teacher.query.filter_by(phone_number=phone_number.data).first()
+        user3 = Student.query.filter_by(phone=phone_number.data).first()
+        user4 = Parent.query.filter_by(phone=phone_number.data).first()
+        if user2 or user3 or user4:
+            raise ValidationError('Этот номер уже занят, попробуйте другой')
+
+    def validate_email(self, email):
+        email2 = Teacher.query.filter_by(email=email.data).first()
+        email3 = Student.query.filter_by(email=email.data).first()
+        email4 = Parent.query.filter_by(email=email.data).first()
+        if email2 or email3 or email4:
             raise ValidationError('Аккаунт с данной почтой уже существует')
 
 
@@ -134,7 +156,8 @@ class ParentForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired()])
     last_name = StringField('Фамиллия', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
-    phone = StringField('Номер телефона', validators=[DataRequired()])
+    phone = StringField('Номер телефона', validators=[
+                               DataRequired(), Length(min=11, max=12)])
     password = PasswordField('Пароль', validators=[
                              DataRequired(), Length(min=4, max=80)])
     confirm_password = PasswordField('Подтвердите пароль', validators=[
@@ -158,13 +181,37 @@ class ParentForm(FlaskForm):
             raise ValidationError('Аккаунт с данной почтой уже существует')
 
 
+        
+class ParentUpdateForm(FlaskForm):
+    update = SubmitField('Обновить')
+    email = StringField('Email', validators=[DataRequired()])
+    phone = StringField('Номер телефона', validators=[
+                               DataRequired(), Length(min=11, max=12)])
+    def validate_phone(self, phone_number):
+        user = Educenter.query.filter_by(phone_number=phone_number.data).first()
+        user2 = Teacher.query.filter_by(phone_number=phone_number.data).first()
+        user3 = Student.query.filter_by(phone=phone_number.data).first()
+        if user or user2 or user3:
+            raise ValidationError('Этот номер уже занят, попробуйте другой')
+        
+
+    def validate_email(self, email):
+        email1 = Educenter.query.filter_by(email=email.data).first()
+        email2 = Teacher.query.filter_by(email=email.data).first()
+        email3 = Student.query.filter_by(email=email.data).first()
+        if email1 or email2 or email3:
+            
+            raise ValidationError('Аккаунт с данной почтой уже существует')
+
+
 class StudentForm(FlaskForm):
     submit = SubmitField('Регистрация')
     first_name = StringField('Имя', validators=[DataRequired()])
     last_name = StringField('Фамиллия', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     age = IntegerField('Возраст', validators=[DataRequired()])
-    phone = StringField('Номер телефона', validators=[DataRequired()])
+    phone = StringField('Номер телефона', validators=[
+                               DataRequired(), Length(min=11, max=12)])
     password = PasswordField('Пароль', validators=[
                              DataRequired(), Length(min=4, max=80)])
     confirm_password = PasswordField('Подтвердите пароль', validators=[
@@ -187,6 +234,28 @@ class StudentForm(FlaskForm):
         if email1 or email2 or email3 or email4:
             raise ValidationError('Аккаунт с данной почтой уже существует')
 
+
+        
+class StudentUpdateForm(FlaskForm):
+    update = SubmitField('Обновить')
+    email = StringField('Email', validators=[DataRequired()])
+    phone = StringField('Номер телефона', validators=[
+                               DataRequired(), Length(min=11, max=12)])
+
+    def validate_phone(self, phone_number):
+        user = Educenter.query.filter_by(
+            phone_number=phone_number.data).first()
+        user2 = Teacher.query.filter_by(phone_number=phone_number.data).first()
+        user4 = Parent.query.filter_by(phone=phone_number.data).first()
+        if user or user2 or user4:
+            raise ValidationError('Этот номер уже занят, попробуйте другой')
+  
+    def validate_email(self, email):
+        email1= Educenter.query.filter_by(email=email.data).first()
+        email2 = Teacher.query.filter_by(email=email.data).first()
+        email4 = Parent.query.filter_by(email=email.data).first()
+        if email1 or email2 or email4:
+            raise ValidationError('Аккаунт с данной почтой уже существует')
 
 # class LoginForm(FlaskForm):
 #    email = StringField('Электронная почта', validators=[DataRequired(),Email()])
