@@ -49,7 +49,7 @@ def sign_in():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Login unsuccessful! Please check the email and password!', 'danger')
+            flash('Неверный логин или пароль! Попробуйте еще раз', 'danger')
     return render_template('sign-in.html', title='Sign-in', form=form)
 
 
@@ -79,7 +79,7 @@ def sign_up_teacher():
             )
             db.session.add(teacher)
             db.session.commit()
-            flash(f'Your account has been created! You are now able to log in!', 'success')
+            flash(f'Ваш аккаунт успешно создан!', 'success')
             return redirect(url_for('sign_in'))
 
     return render_template('sign-up-teacher.html', title='Sign-up', teacher_form=teacher_form)
@@ -102,7 +102,7 @@ def sign_up_parent():
         )
         db.session.add(parent)
         db.session.commit()
-        flash(f'Your account has been created! You are now able to log in!', 'success')
+        flash(f'Ваш аккаунт успешно создан!', 'success')
         return redirect(url_for('sign_in'))
 
     return render_template('sign-up-parent.html', title='Sign-up', parent_form=parent_form)
@@ -127,7 +127,7 @@ def sign_up_student():
         )
         db.session.add(student)
         db.session.commit()
-        flash(f'Your account has been created! You are now able to log in!', 'success')
+        flash(f'Ваш аккаунт успешно создан!', 'success')
         return redirect(url_for('sign_in'))
 
     return render_template('sign-up-student.html', title='Sign-up', student_form=student_form)
@@ -151,7 +151,7 @@ def edu_center_sign_up():
         )
         db.session.add(edu_center)
         db.session.commit()
-        flash(f'Your account has been created! You are now able to log in!', 'success')
+        flash(f'Ваш аккаунт успешно создан!', 'success')
         return redirect(url_for('sign_in'))
 
     return render_template('edu_centers_sign_up.html', title='Sign-up', edu_center_form=edu_center_form)
@@ -204,7 +204,7 @@ def account_update():
                current_user.education = form.education.data
                current_user.experience = form.experience.data
                db.session.commit()
-               flash("Your account has been updated!", 'success')
+               flash("Данные успешно изменены!", 'success')
                return redirect(url_for('account'))
     elif session['type'] == 'EduCenter':
       form = EduCenterRegistrationForm()
@@ -223,7 +223,7 @@ def account_update():
                current_user.address=form.address.data 
                current_user.description=form.description.data 
                db.session.commit()
-               flash("Your account has been updated!", 'success')
+               flash("Данные успешно изменены!", 'success')
                return redirect(url_for('account'))
     elif session['type'] == 'Parent':
       form = ParentForm()
@@ -239,7 +239,7 @@ def account_update():
                current_user.phone=form.phone.data 
                current_user.last_name=form.last_name.data 
                db.session.commit()
-               flash("Your account has been updated!", 'success')
+               flash("Данные успешно изменены!", 'success')
                return redirect(url_for('account'))
 
 
@@ -257,7 +257,7 @@ def add_subject(id):
                               subject_description=form.subject_description.data)
             db.session.add(subject)
             db.session.commit()
-            flash("New subject has been added!", 'success')
+            flash("Предмет успешено добавлен!", 'success')
             return redirect(url_for('account'))
 
 
@@ -277,7 +277,7 @@ def add_course(id):
                               course_description=form.course_description.data)
             db.session.add(course)
             db.session.commit()
-            flash("New course has been added!", 'success')
+            flash("Курс успешно добавлен", 'success')
             course_cur_id =  course.id
             print(course_cur_id)
             return redirect(url_for('edu_teacher_modal', id = course.id))
@@ -353,7 +353,7 @@ def edit_subject(id):
             subject.subject_price = form.subject_price.data
             subject.subject_description = form.subject_description.data
             db.session.commit()
-            flash("Subject has been edited!", 'success')
+            flash("Данные успешно изменены!", 'success')
             return redirect(url_for('account'))
 
         
@@ -375,7 +375,7 @@ def edit_course(course_id):
             courses.course_price = form.course_price.data
             courses.course_description = form.course_description.data
             db.session.commit()
-            flash("Course has been edited!", 'success')
+            flash("Данные успешно изменены!", 'success')
             return redirect(url_for('account'))
 
 
@@ -398,7 +398,7 @@ def edit_edu_teacher(id, course_id):
             edu_teacher.languages = edu_teacher_form.languages.data
             edu_teacher.info = edu_teacher_form.info.data
             db.session.commit()
-            flash("Subject has been edited!", 'success')
+            flash("Данные успешно изменены", 'success')
             return redirect(url_for('edit_course', course_id=course_id))
 
 
