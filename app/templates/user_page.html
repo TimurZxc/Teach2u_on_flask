@@ -38,7 +38,19 @@
               </div>
             </div>
             <hr>
-            
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0"> Направление </p>
+              </div>
+              <div class="col-sm-9">
+                {% if user.direction %}
+                <p class="text-muted mb-0"> 
+                  {{ user.direction }} </p>
+                  {% else %}
+                  <p></p>
+                  {% endif %}
+              </div>
+            </div>
             <div class="row">
               <div class="col-sm-3">
                 <p class="mb-0"> Город </p>
