@@ -75,6 +75,7 @@ def sign_up_teacher():
             last_name=teacher_form.last_name.data,
             email=teacher_form.email.data,
             phone_number=teacher_form.phone_number.data,
+            direction = teacher_form.direction.data,
             password=hashed_password
             )
             db.session.add(teacher)
@@ -373,7 +374,7 @@ def edu_centers():
    return render_template('edu_centers.html', edu_centers=edu_centers)
 
 @app.route('/edu_center_page/<edu_center_id>', methods=['GET', 'POST'])
-@login_required
+
 def edu_center_page(edu_center_id):
     current_user = db.session.query(Educenter).filter(Educenter.id == edu_center_id).first()
     courses = db.session.query(Courses).filter_by(edu_center_id=edu_center_id)
@@ -381,7 +382,6 @@ def edu_center_page(edu_center_id):
 
 
 @app.route('/user_page/<teacher_id>', methods=['GET', 'POST'])
-@login_required
 def user_page(teacher_id):
     current_user = db.session.query(Teacher).filter(
         Teacher.id == teacher_id).first()

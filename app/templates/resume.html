@@ -12,8 +12,8 @@
                </div>
                <h4 class="mb-2"> {{ teacher.first_name }}  {{ teacher.last_name }} </h4>
                <p class="text-muted mb-4">
-                  {{ teacher.phone_number }}<br />
-                  {{ teacher.email }}
+                  {{ teacher.direction }}<br>
+                  направление
                 </p>
                <button type="button" class="btn btn-primary btn-rounded btn-lg">
                   <a href="{{ url_for('user_page', teacher_id=teacher.id) }}" style="text-decoration: none; color: white;">Подробнее</a> 

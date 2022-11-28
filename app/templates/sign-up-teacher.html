@@ -57,7 +57,6 @@
                {{ teacher_form.phone_number(class="form-control form-control-lg") }}
             {% endif %}
          </div><br>
-
          <div class="form-group">
             {{ teacher_form.email.label(class="form-control-label") }}
             {% if teacher_form.email.errors %}
@@ -71,6 +70,20 @@
                {{ teacher_form.email(class="form-control form-control-lg") }}
             {% endif %}
          </div><br>
+         <div class="form-group">
+            {{ teacher_form.direction.label(class="form-control-label") }}
+            {% if teacher_form.direction.errors %}
+               {{ teacher_form.direction(class="form-control form-control-lg is-invalid") }}
+               <div class="invalid-feedback">
+                  {% for error in teacher_form.direction.errors %}
+                     <span>{{ error }}</span>
+                  {% endfor %}
+               </div>
+            {% else %}
+               {{ teacher_form.direction(class="form-control form-control-lg") }}
+            {% endif %}
+         </div><br>
+         
          <div class="form-group">
             {{ teacher_form.password.label(class="form-control-label") }}
             {% if teacher_form.password.errors %}
