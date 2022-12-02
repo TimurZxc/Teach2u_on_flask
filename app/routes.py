@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, session, url_for, request
 from app.forms import LoginForm, ParentUpdateForm, StudentUpdateForm, TeacherRegistrationForm, SubjectForm, EduCenterRegistrationForm, CourseForm, EduTeacher, ParentForm, StudentForm, TeacherUpdateForm, EduCenterUpdateForm
 from app.models import Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
-from app import app, db, bcrypt
+from app import app, db, bcrypt, s, SignatureExpired, Message, mail
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -28,28 +28,31 @@ def sign_in():
         edu_center = Educenter.query.filter_by(email=form.email.data).first()
         parent = Parent.query.filter_by(email=form.email.data).first()
         student = Student.query.filter_by(email=form.email.data).first()
-        if teacher and bcrypt.check_password_hash(teacher.password, form.password.data):
-            sessiontype = 'Teacher'
-            login_user(teacher, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        elif edu_center and bcrypt.check_password_hash(edu_center.password, form.password.data):
-            sessiontype = 'EduCenter'
-            login_user(edu_center, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        elif parent and bcrypt.check_password_hash(parent.password, form.password.data):
-            sessiontype = 'Parent'
-            login_user(parent, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-        elif student and bcrypt.check_password_hash(student.password, form.password.data):
-            sessiontype = 'Student'
-            login_user(student, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+        if teacher and teacher.email_confirm == True:
+            if teacher and bcrypt.check_password_hash(teacher.password, form.password.data):
+                sessiontype = 'Teacher'
+                login_user(teacher, remember=form.remember.data)
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('home'))
+            elif edu_center and bcrypt.check_password_hash(edu_center.password, form.password.data):
+                sessiontype = 'EduCenter'
+                login_user(edu_center, remember=form.remember.data)
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('home'))
+            elif parent and bcrypt.check_password_hash(parent.password, form.password.data):
+                sessiontype = 'Parent'
+                login_user(parent, remember=form.remember.data)
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('home'))
+            elif student and bcrypt.check_password_hash(student.password, form.password.data):
+                sessiontype = 'Student'
+                login_user(student, remember=form.remember.data)
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('home'))
+            else:
+                flash('Неверный логин или пароль! Попробуйте еще раз', 'danger')
         else:
-            flash('Неверный логин или пароль! Попробуйте еще раз', 'danger')
+            flash("Подтвердите почту!", 'warning')
     return render_template('sign-in.html', title='Sign-in', form=form)
 
 
@@ -78,9 +81,15 @@ def sign_up_teacher():
             direction = teacher_form.direction.data,
             password=hashed_password
             )
+            token = s.dumps(teacher_form.email.data, salt='email-confirm')
+            msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[teacher_form.email.data])
+            
+            link = url_for('email_confirm', token=token, _external=True)
+            msg.body = 'Your link is {}'.format(link)
+            mail.send(msg)
             db.session.add(teacher)
             db.session.commit()
-            flash(f'Ваш аккаунт успешно создан!', 'success')
+            flash(f'Ваш аккаунт успешно создан!, Подтвердите почту', 'success')
             return redirect(url_for('sign_in'))
 
     return render_template('sign-up-teacher.html', title='Sign-up', teacher_form=teacher_form)
@@ -157,7 +166,16 @@ def edu_center_sign_up():
 
     return render_template('edu_centers_sign_up.html', title='Sign-up', edu_center_form=edu_center_form)
 
-
+@app.route("/email_confirm/<token>")
+def email_confirm(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+        teacher = Teacher.query.filter_by(email=email).first()
+        teacher.email_confirm = True
+        db.session.commit()
+    except SignatureExpired:
+        return "Token expired"
+    return render_template("email_confirm.html", title='Email confirm')
 
 
 @app.route("/logout")

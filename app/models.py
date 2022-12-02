@@ -31,6 +31,7 @@ class Teacher(db.Model, UserMixin):
    format_ = db.Column(db.String(80), nullable = True)
    languages = db.Column(db.String(80), nullable = True)
    password = db.Column(db.String(80), nullable = False)
+   email_confirm = db.Column(db.Boolean, default = False, index=True)
    type = db.Column(db.String(80), nullable = False, default = "teacher")
    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
 
