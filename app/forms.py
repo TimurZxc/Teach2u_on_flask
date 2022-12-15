@@ -11,11 +11,7 @@ class TeacherRegistrationForm(FlaskForm):
     email = StringField('Электронная почта', validators=[DataRequired(), Email()])
     phone_number = StringField('Номер телефона', validators=[DataRequired(), Length(min=11, max=12)])
     password = PasswordField('Пароль', validators=[DataRequired(), Length(min=4, max=80)])
-<<<<<<< HEAD
     direction = SelectField('Направление обучения', choices=[('Естественно - математическое'), ('Гуманитарное')])
-=======
-    direction = SelectField('Направление обучения', choices=[('Естественно - математическое'), ('Гумманитарное')])
->>>>>>> 25705e07625874fdd1c4d2f64ffb6ea11b1c50e9
     confirm_password = PasswordField('Подтвердите пароль', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Регистрация')
 
