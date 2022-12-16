@@ -84,7 +84,7 @@ def sign_up_teacher():
             token = s.dumps(teacher_form.email.data, salt='email-confirm')
             msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[teacher_form.email.data])
             
-            link = url_for('email_confirm', token=token, _external=True)
+            link = url_for('email_confirm', token=token,_scheme='https', _external=True)
             msg.body = 'Your link is {}'.format(link)
             mail.send(msg)
             db.session.add(teacher)
