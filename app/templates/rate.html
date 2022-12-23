@@ -24,7 +24,7 @@
 
        </div><br> -->
        <div class="form-group">
-        {{ form.rating.label(class="form-control-label") }}
+        {{ form.rating.label(class="form-control-label ") }}
         {% if form.rating.errors %}
         {{ form.rating(class="form-control form-control-lg is-invalid") }}
         <div class="invalid-feedback">
@@ -33,7 +33,7 @@
           {% endfor %}
         </div>
         {% else %}
-        {{ form.rating(class="form-control form-control-lg") }}
+        {{ form.rating(class="d-flex justify-content-around") }}
         {% endif %}
 
       </div><br>

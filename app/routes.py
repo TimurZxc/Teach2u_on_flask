@@ -4,6 +4,7 @@ from app.forms import LoginForm, ParentUpdateForm, RatingForm, ResetForm, SetPas
 from app.models import Feedback, Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
 from app import app, db, bcrypt, s, SignatureExpired, Message, mail
 from flask_login import login_user, current_user, logout_user, login_required
+from sqlalchemy import func
 
 
 
@@ -449,7 +450,12 @@ def user_page(teacher_id):
     current_user = db.session.query(Teacher).filter(
         Teacher.id == teacher_id).first()
     subjects = db.session.query(Subject).filter_by(teacher_id=teacher_id)
-    return render_template("user_page.html", user=current_user, subjects=subjects)
+    rating = db.session.query(Feedback).filter_by(teacher_id=teacher_id)
+    print(rating)
+    result = db.session.query(func.avg(Feedback.rating)).\
+           filter_by(teacher_id=teacher_id).scalar()
+    
+    return render_template("user_page.html", user=current_user, subjects=subjects, rating=round(result, 2))
 
 @app.route('/course_page/<course_id>', methods=['GET', 'POST'])
 @login_required
@@ -550,7 +556,6 @@ def set_session():
 
 @app.route('/rate/<id>', methods=['GET','POST'])
 def rate(id):
-    print(id)
     form = RatingForm()
     if request.method == "POST":
         rating =form.rating.data
