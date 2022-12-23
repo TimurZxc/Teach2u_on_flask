@@ -62,7 +62,70 @@ def sign_up():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     else:
-        return render_template('sign-up.html', title='Sign-up')
+        student_form = StudentForm()
+        if student_form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(
+                student_form.password.data).decode('utf-8')
+            student = Student(
+                first_name=student_form.first_name.data,
+                last_name=student_form.last_name.data,
+                phone=student_form.phone.data,
+                email=student_form.email.data,
+                age=student_form.age.data,
+                password=hashed_password
+            )
+            db.session.add(student)
+            db.session.commit()
+            flash(f'Ваш аккаунт успешно создан!', 'success')
+            return redirect(url_for('sign_in'))
+
+        teacher_form = TeacherRegistrationForm()
+        if teacher_form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(
+                teacher_form.password.data).decode('utf-8')
+            teacher = Teacher(
+                first_name=teacher_form.first_name.data,
+                last_name=teacher_form.last_name.data,
+                email=teacher_form.email.data,
+                phone_number=teacher_form.phone_number.data,
+                password=hashed_password
+            )
+            db.session.add(teacher)
+            db.session.commit()
+            flash(f'Ваш аккаунт успешно создан!', 'success')
+            return redirect(url_for('sign_in'))
+        parent_form = ParentForm()
+        if parent_form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(
+                parent_form.password.data).decode('utf-8')
+            parent = Parent(
+                first_name=parent_form.first_name.data,
+                last_name=parent_form.last_name.data,
+                phone=parent_form.phone.data,
+                email=parent_form.email.data,
+                password=hashed_password
+            )
+            db.session.add(parent)
+            db.session.commit()
+            flash(f'Ваш аккаунт успешно создан!', 'success')
+            return redirect(url_for('sign_in'))
+        edu_center_form = EduCenterRegistrationForm()
+        if edu_center_form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(
+                edu_center_form.password.data).decode('utf-8')
+            edu_center = Educenter(
+                name=edu_center_form.name.data,
+                phone_number=edu_center_form.phone_number.data,
+                email=edu_center_form.email.data,
+                description=edu_center_form.description.data,
+                address=edu_center_form.address.data,
+                password=hashed_password
+            )
+            db.session.add(edu_center)
+            db.session.commit()
+            flash(f'Ваш аккаунт успешно создан!', 'success')
+            return redirect(url_for('sign_in'))
+        return render_template('sign-up.html', title='Sign-up', student_form=student_form, teacher_form=teacher_form, parent_form=parent_form, edu_center_form=edu_center_form)
 
 
 @app.route('/sign-up-teacher', methods=['POST', 'GET'])
@@ -84,7 +147,7 @@ def sign_up_teacher():
             token = s.dumps(teacher_form.email.data, salt='email-confirm')
             msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[teacher_form.email.data])
             
-            link = url_for('email_confirm', token=token,_scheme='https', _external=True)
+            link = url_for('email_confirm', token=token, _scheme='https', _external=True)
             msg.body = 'Your link is {}'.format(link)
             mail.send(msg)
             db.session.add(teacher)

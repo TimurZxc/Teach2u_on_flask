@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../static/css/add.css">
 {% extends 'layout.html' %}
 {% block content %}
 <form id="ModalForm" name="stepForm" class="form" method="post">
@@ -53,7 +54,7 @@
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-default" > <a href="{{url_for('account')}}" style="color: black; text-decoration: none;">Отмена</a> </button>
-      <button id="submit" type="submit" class="btn btn-primary">Сохранить</button>
+      <button id="submit" type="submit" class="btn btn-warning">Сохранить</button>
    </div>
 </form>
 {% endblock %}

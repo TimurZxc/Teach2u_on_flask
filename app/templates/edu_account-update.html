@@ -14,7 +14,7 @@
               {{ current_user.email }}
             </p>
             <div class="d-flex justify-content-center mb-2">
-              <button class="btn btn-primary">
+              <button class="btn btn-warning">
                 <a href="{{url_for('account')}}" style="text-decoration: none; color: #fff;">Назад</a>
               </button>
             </div>
@@ -103,7 +103,7 @@
             
           </fieldset>
           <div class="form-group d-flex justify-content-center">
-            {{ form.update(class="btn btn-primary") }}
+            {{ form.update(class="btn btn-warning") }}
           </div>
         </form>
       </div>

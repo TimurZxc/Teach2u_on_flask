@@ -1,0 +1,12 @@
+.subBtn{
+    width: 65%;
+    padding: 10px 30px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+    background: linear-gradient(253.58deg, #FFC000 1.55%, #FF8A00 95.8%) !important;
+    border: 0;
+    color: #5C5C5C;
+    outline: none;
+    border-radius: 30px !important;
+}

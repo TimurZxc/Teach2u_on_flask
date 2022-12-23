@@ -16,8 +16,8 @@
               {{ current_user.email }}
             </p>
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary"> <a href="{{url_for('account_update')}}"
-                  style="text-decoration: none; color:#ffff;">Изменить</a></button>
+               <a class="btn btn-warning" href="{{url_for('account_update')}}"
+                  style="text-decoration: none; color:#ffff;">Изменить</a>
             </div>
           </div>
         </div>
@@ -40,15 +40,6 @@
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0"> {{ current_user.last_name }} </p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0"> Направление </p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"> {{ current_user.direction }} </p>
               </div>
             </div>
             <hr>
@@ -129,12 +120,10 @@
     <div class="row">
 
       <div class="d-flex justify-content-center mb-2">
-        <button type="button" class="btn btn-primary">
-          <a class="edit-modal-opener" data-toggle="modal"
+          <a class="btn btn-warning edit-modal-opener" data-toggle="modal"
             data-whatever="{{ url_for('add_subject', id=current_user.id) }}"
             href="{{ url_for('add_subject', id=current_user.id) }}"
             style="color: white; text-decoration: none;">Добавить предмет</a>
-        </button>
 
 
       </div>
@@ -150,7 +139,7 @@
                     {{ subject.subject_price }} ₸/час<br />
                     {{ subject.subject_description }}
                   </p>
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-warning">
                     <a href="{{ url_for('edit_subject', id = current_user.id) }}"
                       style="color: white; text-decoration: none;">Изменить</a>
                   </button>
@@ -185,7 +174,7 @@
               {{ current_user.email }}
             </p>
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary"> <a href="{{url_for('account_update')}}"
+              <button type="button" class="btn btn-warning"> <a href="{{url_for('account_update')}}"
                   style="text-decoration: none; color:#ffff;">Изменить</a></button>
             </div>
           </div>
@@ -220,11 +209,11 @@
     <div class="row">
 
       <div class="d-flex justify-content-center mb-2">
-        
+
           <a class="edit-modal-opener" data-toggle="modal"
             data-whatever="{{ url_for('add_course', id=current_user.id) }}"
             href="{{ url_for('add_course', id=current_user.id) }}"
-            style="color: white; text-decoration: none;"><button type="button" class="btn btn-primary">Добавить курс</button></a>
+            style="color: white; text-decoration: none;"><button type="button" class="btn btn-warning">Добавить курс</button></a>
 
 
       </div>
@@ -240,7 +229,7 @@
                     {{ course.course_price }} ₸<br />
                     {{ course.course_description }}
                   </p>
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-warning">
                     <a href="{{ url_for('edit_course', course_id = course.id) }}"
                       style="color: white; text-decoration: none;">Изменить</a>
                   </button>
@@ -259,7 +248,7 @@
     </div>
   </div>
   </div>
-  
+
 </section>
 {%  elif session['type'] == 'Parent' %}
 <section style="background-color: #eee;">
@@ -276,18 +265,18 @@
               {{ current_user.email }}
             </p>
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary"> <a href="{{url_for('account_update')}}"
+              <button type="button" class="btn btn-warning"> <a href="{{url_for('account_update')}}"
                   style="text-decoration: none; color:#ffff;">Изменить</a></button>
             </div>
           </div>
         </div>
       </div>
-      
+
     </div>
     <div class="row">
 
       <div class="d-flex justify-content-center mb-2">
-        
+
           <a class="edit-modal-opener" data-toggle="modal"
             data-whatever="{{ url_for('add_course', id=current_user.id) }}"
             href="#"
@@ -295,11 +284,11 @@
 
 
       </div>
-      
+
     </div>
   </div>
   </div>
-  
+
 </section>
 {%  elif session['type'] == 'Student' %}
 <section style="background-color: #eee;">
@@ -316,27 +305,27 @@
               {{ current_user.email }}
             </p>
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary"> <a href="{{url_for('account_update')}}"
+              <button type="button" class="btn btn-warning"> <a href="{{url_for('account_update')}}"
                   style="text-decoration: none; color:#ffff;">Изменить</a></button>
             </div>
           </div>
         </div>
       </div>
-      
+
     </div>
     <div class="row">
 
       <div class="d-flex justify-content-center mb-2">
-        
-          
+
+
 
 
       </div>
-      
+
     </div>
   </div>
   </div>
-  
+
 </section>
 {% endif %}
 {% endblock %}

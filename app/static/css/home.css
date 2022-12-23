@@ -1,0 +1,63 @@
+.headerText{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hook{
+    text-decoration: underline;
+    text-underline-position: under;
+    text-decoration-color: #FFC000;
+    text-decoration-thickness: 5px;
+    animation: mymove 5s infinite;
+}
+
+@keyframes mymove {
+  from {text-decoration-color: #FFC000;}
+  to {text-decoration-color: #FF8A00;}
+    to {text-decoration-color: #FF8A00;}
+}
+
+.icons{
+    text-align: center;
+    width: 100%;
+}
+
+.icons p{
+    font-size: 18px;
+    max-width: 610px;
+    margin: 15px auto;
+    /*text-decoration: underline;*/
+    /*text-underline-position: under;*/
+    /*text-decoration-color: #FFC000;*/
+    /*text-decoration-thickness: 3px;*/
+    /*animation: mymove 5s infinite;*/
+}
+
+.icons h3{
+    margin-top: 30px;
+}
+
+.offerBtn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 150px;
+}
+
+.buy-btn {
+    width: 180px;
+    height: 50px;
+    background: linear-gradient(253.58deg, #FFC000 1.55%, #FF8A00 95.8%);
+    box-shadow: 0px 12px 35px rgba(160, 121, 0, 0.2);
+    border-radius: 100px;
+    border: none;
+    color: white;
+    outline: none;
+}
+
+.buy-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+}
+

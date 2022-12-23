@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../static/css/resume.css">
 {% extends 'layout.html' %}
 {% block content %}
 <div class="container py-5 h-100">
@@ -15,9 +16,9 @@
                   {{ teacher.direction }}<br>
                   направление
                 </p>
-               <button type="button" class="btn btn-primary btn-rounded btn-lg">
-                  <a href="{{ url_for('user_page', teacher_id=teacher.id) }}" style="text-decoration: none; color: white;">Подробнее</a> 
-               </button>
+                <a class="submit-btn" href="{{ url_for('user_page', teacher_id=teacher.id) }}">
+                  Подробнее
+                </a>
             </div>
          </div>
 
