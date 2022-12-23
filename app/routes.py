@@ -127,108 +127,6 @@ def sign_up():
             return redirect(url_for('sign_in'))
         return render_template('sign-up.html', title='Sign-up', student_form=student_form, teacher_form=teacher_form, parent_form=parent_form, edu_center_form=edu_center_form)
 
-
-@app.route('/sign-up-teacher', methods=['POST', 'GET'])
-def sign_up_teacher():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    teacher_form = TeacherRegistrationForm()
-    if teacher_form.validate_on_submit():
-            hashed_password = bcrypt.generate_password_hash(
-            teacher_form.password.data).decode('utf-8')
-            teacher = Teacher(
-            first_name=teacher_form.first_name.data,
-            last_name=teacher_form.last_name.data,
-            email=teacher_form.email.data,
-            phone_number=teacher_form.phone_number.data,
-            direction = teacher_form.direction.data,
-            password=hashed_password
-            )
-            token = s.dumps(teacher_form.email.data, salt='email-confirm')
-            msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[teacher_form.email.data])
-            
-            link = url_for('email_confirm', token=token, _scheme='https', _external=True)
-            msg.body = 'Your link is {}'.format(link)
-            mail.send(msg)
-            db.session.add(teacher)
-            db.session.commit()
-            flash(f'Ваш аккаунт успешно создан!, Подтвердите почту', 'success')
-            return redirect(url_for('sign_in'))
-
-    return render_template('sign-up-teacher.html', title='Sign-up', teacher_form=teacher_form)
-
-
-@app.route('/sign-up-parent', methods=['POST', 'GET'])
-def sign_up_parent():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    parent_form = ParentForm()
-    if parent_form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            parent_form.password.data).decode('utf-8')
-        parent = Parent(
-            first_name=parent_form.first_name.data,
-            last_name=parent_form.last_name.data,
-            phone=parent_form.phone.data,
-            email=parent_form.email.data,
-            password=hashed_password
-        )
-        db.session.add(parent)
-        db.session.commit()
-        flash(f'Ваш аккаунт успешно создан!', 'success')
-        return redirect(url_for('sign_in'))
-
-    return render_template('sign-up-parent.html', title='Sign-up', parent_form=parent_form)
-
-
-
-@app.route('/sign-up-student', methods=['POST', 'GET'])
-def sign_up_student():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    student_form = StudentForm()
-    if student_form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            student_form.password.data).decode('utf-8')
-        student = Student(
-            first_name=student_form.first_name.data,
-            last_name=student_form.last_name.data,
-            phone=student_form.phone.data,
-            email=student_form.email.data,
-            age = student_form.age.data,
-            password=hashed_password
-        )
-        db.session.add(student)
-        db.session.commit()
-        flash(f'Ваш аккаунт успешно создан!', 'success')
-        return redirect(url_for('sign_in'))
-
-    return render_template('sign-up-student.html', title='Sign-up', student_form=student_form)
-
-
-@app.route('/sign_up/edu_center_sign_up', methods=['GET', 'POST'])
-def edu_center_sign_up():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    edu_center_form = EduCenterRegistrationForm()
-    if edu_center_form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            edu_center_form.password.data).decode('utf-8')
-        edu_center = Educenter(
-            name=edu_center_form.name.data,
-            phone_number=edu_center_form.phone_number.data,
-            email=edu_center_form.email.data,
-            description=edu_center_form.description.data,
-            address=edu_center_form.address.data,
-            password=hashed_password
-        )
-        db.session.add(edu_center)
-        db.session.commit()
-        flash(f'Ваш аккаунт успешно создан!', 'success')
-        return redirect(url_for('sign_in'))
-
-    return render_template('edu_centers_sign_up.html', title='Sign-up', edu_center_form=edu_center_form)
-
 @app.route("/email_confirm/<token>")
 def email_confirm(token):
     try:
@@ -240,12 +138,10 @@ def email_confirm(token):
         return "Token expired"
     return render_template("email_confirm.html", title='Email confirm')
 
-
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
 
 @app.route("/account")
 @login_required
@@ -262,7 +158,6 @@ def account():
         return render_template('account.html', title='Account')
     elif session['type'] == 'Student':
         return render_template('account.html', title='Account')
-
 
 @app.route("/account-update", methods=['POST', 'GET'])
 @login_required
@@ -382,8 +277,6 @@ def account_update():
                 flash("Почта или телефон уже заняты!", "danger")
                 return redirect(url_for('account'))
 
-
-
 @app.route('/account/<id>/add_subject', methods=['GET', 'POST'])
 def add_subject(id):
     teacher = Teacher.query.filter_by(id=id).first_or_404()
@@ -400,9 +293,6 @@ def add_subject(id):
             db.session.commit()
             flash("Предмет успешено добавлен!", 'success')
             return redirect(url_for('account'))
-
-
-
 
 @app.route('/account/<id>/add_course', methods=['GET', 'POST'])
 def add_course(id):
@@ -455,12 +345,10 @@ def edu_centers():
    return render_template('edu_centers.html', edu_centers=edu_centers)
 
 @app.route('/edu_center_page/<edu_center_id>', methods=['GET', 'POST'])
-
 def edu_center_page(edu_center_id):
     current_user = db.session.query(Educenter).filter(Educenter.id == edu_center_id).first()
     courses = db.session.query(Courses).filter_by(edu_center_id=edu_center_id)
     return render_template("edu_center_page.html", user=current_user, courses=courses)
-
 
 @app.route('/user_page/<teacher_id>', methods=['GET', 'POST'])
 def user_page(teacher_id):
@@ -468,7 +356,6 @@ def user_page(teacher_id):
         Teacher.id == teacher_id).first()
     subjects = db.session.query(Subject).filter_by(teacher_id=teacher_id)
     return render_template("user_page.html", user=current_user, subjects=subjects)
-
 
 @app.route('/course_page/<course_id>', methods=['GET', 'POST'])
 @login_required
@@ -496,8 +383,6 @@ def edit_subject(id):
             flash("Данные успешно изменены!", 'success')
             return redirect(url_for('account'))
 
-        
-
 @app.route('/account/edit_course/<course_id>', methods=['GET', 'POST'])
 def edit_course(course_id):
     form = CourseForm()
@@ -517,8 +402,6 @@ def edit_course(course_id):
             db.session.commit()
             flash("Данные успешно изменены!", 'success')
             return redirect(url_for('account'))
-
-
 
 @app.route('/account/edit_course/<id>/edit_edu_teacher/<course_id>', methods=['GET', 'POST'])
 def edit_edu_teacher(id, course_id):
@@ -541,7 +424,6 @@ def edit_edu_teacher(id, course_id):
             flash("Данные успешно изменены", 'success')
             return redirect(url_for('edit_course', course_id=course_id))
 
-
 @app.route('/account/<id>/delete_subject', methods=['GET', 'POST'])
 def delete_subject(id):
     subject = Subject.query.filter_by(id=id).first_or_404()
@@ -557,17 +439,12 @@ def delete_edu_teacher(id, course_id):
     db.session.commit()
     return redirect(url_for('edit_course', course_id=course_id  ))
 
-
 @app.route('/account/<course_id>/delete_course', methods=['GET', 'POST'])
 def delete_course(course_id):
     course = Courses.query.filter_by(id=course_id).first_or_404()
     db.session.delete(course)
     db.session.commit()
     return redirect(url_for('account'))
-
-
-
-
 
 @app.route('/set_session')
 def set_session():
