@@ -4,7 +4,7 @@
     flex-direction: column;
     overflow: hidden;
 }
-.form-box{
+form{
     width: 420px;
     height: 900px;
     margin: 0 auto;
@@ -105,11 +105,12 @@
     color: #5C5C5C;
 }
 
-.radio-box-butn input[type="radio"]:checked + label {
+.radio-box-butn input[type="radio"]:checked + label{
     background-color: #76cf9f;
     height: 100%;
     background: linear-gradient(253.58deg, #FFC000 1.55%, #FF8A00 95.8%);
     border-radius: 30px;
     color: white;
+    text-decoration: n;
     /*transition: .5s;*/
 }

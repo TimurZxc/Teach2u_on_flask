@@ -39,7 +39,6 @@ class Teacher(db.Model, UserMixin):
    def __repr__(self):
       return f"Teacher('{self.first_name}'),Teacher('{self.last_name}'), Teacher('{self.email}'),  Teacher('{self.phonr_number}'), Teacher('{self.city}')"
 
-
 class Subject(db.Model):
    id = db.Column(db.Integer, primary_key = True)
    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
@@ -47,7 +46,6 @@ class Subject(db.Model):
    subject_price = db.Column(db.Integer, nullable = False)
    subject_description = db.Column(db.Text, nullable = False)
    teacher = relationship("Teacher",backref="subjects") 
-
 
 class Educenter(db.Model, UserMixin):
    id = db.Column(db.Integer, primary_key = True)
@@ -60,8 +58,6 @@ class Educenter(db.Model, UserMixin):
    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
 
    type = db.Column(db.String(80), nullable = False, default = "edu_center")
-
-
 
 class Courses(db.Model):   
    id = db.Column(db.Integer, primary_key = True)
@@ -77,7 +73,6 @@ class Courses(db.Model):
         cascade='save-update, merge, delete'
     )
 
-
 class Eduteachers(db.Model):   
    id = db.Column(db.Integer, primary_key = True)
    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable = False)
@@ -87,7 +82,6 @@ class Eduteachers(db.Model):
    languages = db.Column(db.String(20), nullable = False)
    course = relationship("Courses",back_populates='eduteachers') 
    
-
 class Parent(db.Model, UserMixin):
    id = db.Column(db.Integer, primary_key = True)
    first_name = db.Column(db.String(80), nullable = False)
@@ -97,8 +91,6 @@ class Parent(db.Model, UserMixin):
    password = db.Column(db.String(80), nullable = False)
    type = db.Column(db.String(80), nullable = False, default = "parent")
 
-
-   
 class Student(db.Model, UserMixin):
    id = db.Column(db.Integer, primary_key = True)
    first_name = db.Column(db.String(80), nullable = False)
@@ -111,7 +103,15 @@ class Student(db.Model, UserMixin):
    edu_center_id = db.Column(db.Integer, db.ForeignKey('educenter.id'))
    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
-   
+
+class Feedback(db.Model):
+   id = db.Column(db.Integer, primary_key = True)
+   teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+   name = db.Column(db.String(80), nullable = False)
+   rating = db.Column(db.Integer, nullable = False)
+   feedback = db.Column(db.Text, nullable = False)
+   teacher = relationship("Teacher",backref="feedback") 
+
 
 
 with app.app_context():

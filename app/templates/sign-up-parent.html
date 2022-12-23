@@ -1,0 +1,145 @@
+<link rel="stylesheet" href="../static/css/sign-up.css">
+{% extends 'layout.html' %}
+{% block content %}
+<div class="content-section">
+   <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Регистрация</legend>
+      <small>Выберите какой тип аккаунта вы хотите создать:</small>
+      <br>
+      <br>
+      <div class="radio-box-butn">
+         <input type="radio" name="choice" id="choice1" onclick="openStudent()" >
+         <label for="choice1">
+             Ученик
+         </label>
+         <input type="radio" name="choice" id="choice2" onclick="openTeacher()">
+          <label for="choice2">
+              Преподаватель
+          </label>
+          <input type="radio" name="choice" id="choice3" onclick="openParent()" checked>
+          <label for="choice3">
+              Родитель
+          </label>
+          <input type="radio" name="choice" id="choice4" onclick="openCenter()">
+          <label for="choice4">
+              Образовательный центр
+          </label>
+          <a class="slide" aria-hidden="true"></a>
+      </div>
+  </fieldset>
+   <form method="POST" action="">
+      {{ parent_form.hidden_tag() }}
+      <fieldset class="form-group">
+         <legend class="border-bottom mb-4">Регистрация родителя</legend>
+         <div class="form-group">
+            {{ parent_form.first_name.label(class="form-control-label") }}
+            {% if parent_form.first_name.errors %}
+            {{ parent_form.first_name(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in parent_form.first_name.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            {{ parent_form.first_name(class="form-control form-control-lg") }}
+            {% endif %}
+
+          </div><br>
+          <div class="form-group">
+            {{ parent_form.last_name.label(class="form-control-label") }}
+            {% if parent_form.last_name.errors %}
+            {{ parent_form.last_name(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in parent_form.last_name.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            {{ parent_form.last_name(class="form-control form-control-lg") }}
+            {% endif %}
+          </div><br>
+         
+          <div class="form-group">
+            {{ parent_form.phone.label(class="form-control-label") }}
+            {% if parent_form.phone.errors %}
+               {{ parent_form.phone(class="form-control form-control-lg is-invalid") }}
+               <div class="invalid-feedback">
+                  {% for error in parent_form.phone.errors %}
+                     <span>{{ error }}</span>
+                  {% endfor %}
+               </div>
+            {% else %}
+               {{ parent_form.phone(class="form-control form-control-lg") }}
+            {% endif %}
+         </div><br>
+
+         <div class="form-group">
+            {{ parent_form.email.label(class="form-control-label") }}
+            {% if parent_form.email.errors %}
+               {{ parent_form.email(class="form-control form-control-lg is-invalid") }}
+               <div class="invalid-feedback">
+                  {% for error in parent_form.email.errors %}
+                     <span>{{ error }}</span>
+                  {% endfor %}
+               </div>
+            {% else %}
+               {{ parent_form.email(class="form-control form-control-lg") }}
+            {% endif %}
+         </div><br>
+         <div class="form-group">
+            {{ parent_form.password.label(class="form-control-label") }}
+            {% if parent_form.password.errors %}
+               {{ parent_form.password(class="form-control form-control-lg is-invalid") }}
+               <div class="invalid-feedback">
+                  {% for error in parent_form.password.errors %}
+                     <span>{{ error }}</span>
+                  {% endfor %}
+               </div>
+            {% else %}
+               {{ parent_form.password(class="form-control form-control-lg") }}
+            {% endif %}
+         </div><br>
+         <div class="form-group">
+            {{ parent_form.confirm_password.label(class="form-control-label") }}
+            {% if parent_form.confirm_password.errors %}
+               {{ parent_form.confirm_password(class="form-control form-control-lg is-invalid") }}
+               <div class="invalid-feedback">
+                  {% for error in parent_form.confirm_password.errors %}
+                     <span>{{ error }}</span>
+                  {% endfor %}
+               </div>
+            {% else %}
+               {{ parent_form.confirm_password(class="form-control form-control-lg") }}
+            {% endif %}
+         </div><br>
+         
+      </fieldset>
+      <div class="form-group">
+         {{ parent_form.submit(class="btn btn-outline-info") }}
+      </div>
+      <br>
+   </form>
+</div>
+<div class="border-top pt-3">
+   <small class="text-muted">
+      Уже есть аккаунт? <a href="{{ url_for('sign_in') }}" class="ml-2">Войти</a>
+   </small>
+</div>
+<script>
+   function openStudent() {
+       document.location.href = "{{ url_for('sign_up_student') }}"
+   }
+   function openTeacher() {
+       document.location.href = "{{url_for('sign_up_teacher')}}"
+   }
+   
+   function openParent() {
+       document.location.href = "{{ url_for('sign_up_parent') }}"
+   }
+   
+   function openCenter() {
+       document.location.href = "{{url_for('edu_center_sign_up')}}"
+   }
+   
+   </script>
+{% endblock %}

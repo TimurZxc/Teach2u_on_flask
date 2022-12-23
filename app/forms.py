@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, IntegerField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from app.models import Teacher, Educenter, Student, Parent
 
@@ -69,6 +69,19 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
+class ResetForm(FlaskForm):
+    email = StringField('Электронная почта', validators=[
+                        DataRequired(), Email()])
+    submit = SubmitField('Сбросить пароль')
+
+
+class SetPasswordForm(FlaskForm):
+    email = StringField('Электронная почта', validators=[
+                        DataRequired(), Email()])
+    password = PasswordField('Пароль', validators=[
+                             DataRequired(), Length(min=4, max=80)])
+    confirm_password = PasswordField('Подтвердите пароль', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Сбросить пароль')
 
 class SubjectForm(FlaskForm):
     subject_name = StringField('Название', validators=[DataRequired()])
@@ -259,26 +272,7 @@ class StudentUpdateForm(FlaskForm):
         if email1 or email2 or email4:
             raise ValidationError('Аккаунт с данной почтой уже существует')
 
-# class LoginForm(FlaskForm):
-#    email = StringField('Электронная почта', validators=[DataRequired(),Email()])
-#    password = PasswordField('Пароль', validators=[DataRequired(),Length(min= 4, max=80)])
-#    remember = BooleanField('Запомнить меня')
-#    submit = SubmitField('Войти')
-
-# class UpdateForm(FlaskForm):
-#    first_name = StringField('Имя',validators=[DataRequired(),Length(min= 1, max=50)])
-#    last_name = StringField('Фамилия',validators=[DataRequired(),Length(min= 1, max=50)])
-#    email = StringField('Электронная почта', validators=[DataRequired(),Email()])
-#    submit = SubmitField('Загрузить')
-
-#    def validate_username(self, username):
-#       if username.data != current_user.username:
-#          user = User.query.filter_by(username = username.data).first()
-#          if user:
-#             raise ValidationError('This username is already taked! Please choose another one.')
-
-#    def validate_email(self, email):
-#       if email.data != current_user.email:
-#          email = User.query.filter_by(email = email.data).first()
-#          if email:
-#             raise ValidationError('This email is already taked! Please choose another one.')
+class RatingForm(FlaskForm):
+    name = StringField('Имя', validators=[DataRequired()])
+    rating = RadioField('Оценка', choices = [('1', '1'), ('2', '2'), ('3','3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    description = TextAreaField('Отзыв', validators=[DataRequired()])
