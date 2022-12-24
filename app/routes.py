@@ -111,6 +111,11 @@ def sign_up_parent():
             email=parent_form.email.data,
             password=hashed_password
         )
+        token = s.dumps(parent_form.email.data, salt='email-confirm')
+        msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[parent_form.email.data])
+        link = url_for('email_confirm', token=token,email=parent_form.email.data, _external=True)
+        msg.body = 'Your link is {}'.format(link)
+        mail.send(msg)
         db.session.add(parent)
         db.session.commit()
         flash(f'Ваш аккаунт успешно создан!', 'success')
@@ -136,6 +141,11 @@ def sign_up_student():
             age = student_form.age.data,
             password=hashed_password
         )
+        token = s.dumps(student_form.email.data, salt='email-confirm')
+        msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[student_form.email.data])
+        link = url_for('email_confirm', token=token,email=student_form.email.data, _external=True)
+        msg.body = 'Your link is {}'.format(link)
+        mail.send(msg)
         db.session.add(student)
         db.session.commit()
         flash(f'Ваш аккаунт успешно создан!', 'success')
@@ -160,6 +170,11 @@ def edu_center_sign_up():
             address=edu_center_form.address.data,
             password=hashed_password
         )
+        token = s.dumps(edu_center_form.email.data, salt='email-confirm')
+        msg = Message('Confirm Email', sender='teach2u.0000@gmail.com', recipients=[edu_center_form.email.data])
+        link = url_for('email_confirm', token=token,email=edu_center_form.email.data, _external=True)
+        msg.body = 'Your link is {}'.format(link)
+        mail.send(msg)
         db.session.add(edu_center)
         db.session.commit()
         flash(f'Ваш аккаунт успешно создан!', 'success')
@@ -173,10 +188,28 @@ def email_confirm(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
         teacher = Teacher.query.filter_by(email=email).first()
-        teacher.email_confirm = True
-        db.session.commit()
+        if teacher:
+            teacher.email_confirm = True
+            db.session.commit()
+            return redirect(url_for('sign_in'))
+        student = Student.query.filter_by(email=email).first()
+        if student:
+            student.email_confirm = True
+            db.session.commit()
+            return redirect(url_for('sign_in'))
+        educenter = Educenter.query.filter_by(email=email).first()
+        if educenter:
+            educenter.email_confirm = True
+            db.session.commit()
+            return redirect(url_for('sign_in'))
+        parent = Parent.query.filter_by(email=email).first()
+        if parent:
+            parent.email_confirm = True
+            db.session.commit()
+            return redirect(url_for('sign_in'))
     except SignatureExpired:
-        return "Token expired"
+        flash("Время выделенное на подтвеждение почты истекло! Пройдите регистрацию заново")
+        return redirect(url_for('sign_in'))
     return render_template("email_confirm.html", title='Email confirm')
 
 @app.route("/logout")
