@@ -274,5 +274,11 @@ class StudentUpdateForm(FlaskForm):
 
 class RatingForm(FlaskForm):
     name = StringField('Имя', validators=[DataRequired()])
-    rating = RadioField('Оценка', choices = [('1', '★'), ('2', '★'), ('3','★'), ('4', '★'), ('5', '★')], validators=[DataRequired()])
+    rating = RadioField(
+        'Оценка',
+        choices=[('1', '☻'), ('2', '☻'), ('3', '☻'), ('4', '☻'), ('5', '☻')],
+        default='5',
+        coerce=int
+    )
+    
     description = TextAreaField('Отзыв', validators=[DataRequired()])

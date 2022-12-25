@@ -488,7 +488,7 @@ def user_page(teacher_id):
     result = db.session.query(func.avg(Feedback.rating)).\
            filter_by(teacher_id=teacher_id).scalar()
     
-    return render_template("user_page.html", user=current_user, subjects=subjects, rating=result,)
+    return render_template("user_page.html", user=current_user, subjects=subjects, rating=round(result, 2),)
 
 @app.route('/course_page/<course_id>', methods=['GET', 'POST'])
 @login_required
