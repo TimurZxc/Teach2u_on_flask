@@ -1,0 +1,54 @@
+.star {
+   color: orange;
+ }
+
+ .star-empty {
+   color: lightgray;
+ }
+
+ .rating{
+   display: flex;
+   justify-content: space-around;
+   list-style: none;
+ }
+
+
+
+ input[type="radio"] {
+   -webkit-appearance: none;
+   appearance: none;
+   display: inline-block;
+   width: 20px;
+   height: 20px;
+   background-color: transparent;
+   border: none;
+   outline: none;
+   cursor: pointer;
+ }
+ 
+ input[type="radio"]:before {
+   content: "★";
+   font-size: 32px;
+   color: #ccc;
+   display: inline-block;
+   width: 20px;
+   height: 20px;
+ }
+ 
+ input[type="radio"]:checked:before {
+   color: orange;
+ }
+ 
+ input[type="radio"]:hover:before {
+   color: orange;
+ }
+ 
+ input[type="radio"]:active:before {
+   color: orange;
+ }
+ 
+
+ input[type="radio"]:nth-of-type(-n+3):checked:before {
+   background-color: orange;
+ }
+ 

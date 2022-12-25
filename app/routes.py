@@ -488,7 +488,7 @@ def user_page(teacher_id):
     result = db.session.query(func.avg(Feedback.rating)).\
            filter_by(teacher_id=teacher_id).scalar()
     
-    return render_template("user_page.html", user=current_user, subjects=subjects, rating=round(result, 2))
+    return render_template("user_page.html", user=current_user, subjects=subjects, rating=result,)
 
 @app.route('/course_page/<course_id>', methods=['GET', 'POST'])
 @login_required
@@ -588,14 +588,15 @@ def set_session():
 
 
 @app.route('/rate/<id>', methods=['GET','POST'])
+@login_required
 def rate(id):
     form = RatingForm()
+    feedback = Feedback.query.filter_by(teacher_id=id).all()
+
     if request.method == "POST":
-        rating =form.rating.data
-        teacher = Teacher.query.filter_by(id=id).first_or_404()
-        name = teacher.first_name + teacher.last_name
-        rating_obj = Feedback(teacher_id = id, name = name, rating=int(rating), feedback= form.description.data)
+        rating = form.rating.data
+        rating_obj = Feedback(teacher_id = id, name = form.name.data, rating=int(rating), feedback= form.description.data)
         db.session.add(rating_obj)
         db.session.commit()
         return redirect(url_for('user_page', teacher_id = id))
-    return render_template('rate.html', form=form)
+    return render_template('rate.html', form=form, feedbacks = feedback)

@@ -18,6 +18,8 @@
               }
             </style>
             
+            
+            {% if rating  %}
             {% set whole_stars = rating | int %}
             {% set empty_stars = 5 - whole_stars - 1 %}
             {% set half_star = rating - whole_stars > 0 %}
@@ -33,7 +35,12 @@
             {% for i in range(empty_stars) %}
               <i class="fa fa-star star-empty"></i>
             {% endfor %}
-            <p class="text-muted mb-1"> {{ rating }} </p>
+            <p class="text-muted mb-1"> 
+              {{ rating }} 
+            </p>
+            {% else %}
+            <p>Нет отзывов</p>
+            {% endif %}
             <a href="{{ url_for('rate', id = user.id) }}"  class="btn btn-primary">Оценить</a>
             <p class="text-muted mb-4">
               {{ user.phone_number }}<br />
