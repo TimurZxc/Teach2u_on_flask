@@ -114,16 +114,17 @@
          </div><br>
          
       </fieldset>
-      <div class="form-group">
-         {{ parent_form.submit(class="btn btn-outline-info") }}
+      <div class="d-flex justify-content-between align-items-center">
+         <div class="form-group">
+            {{ parent_form.submit(class="btn btn-outline-info") }}
+         </div>
+         <div class="">
+            <small class="text-muted">
+               Уже есть аккаунт? <a href="{{ url_for('sign_in') }}" class="ml-2">Войти</a>
+            </small>
+         </div>
       </div>
-      <br>
    </form>
-</div>
-<div class="border-top pt-3">
-   <small class="text-muted">
-      Уже есть аккаунт? <a href="{{ url_for('sign_in') }}" class="ml-2">Войти</a>
-   </small>
 </div>
 <script>
    function openStudent() {

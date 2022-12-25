@@ -56,7 +56,7 @@ class Educenter(db.Model, UserMixin):
    address = db.Column(db.String(80), nullable = True)
    password = db.Column(db.String(80), nullable = False)
    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-
+   email_confirm = db.Column(db.Boolean, default = False, index=True)
    type = db.Column(db.String(80), nullable = False, default = "edu_center")
 
 class Courses(db.Model):   
@@ -89,6 +89,7 @@ class Parent(db.Model, UserMixin):
    email = db.Column(db.String(80), nullable = False)
    phone = db.Column(db.String(20), nullable = False)
    password = db.Column(db.String(80), nullable = False)
+   email_confirm = db.Column(db.Boolean, default = False, index=True)
    type = db.Column(db.String(80), nullable = False, default = "parent")
 
 class Student(db.Model, UserMixin):
@@ -102,6 +103,7 @@ class Student(db.Model, UserMixin):
    type = db.Column(db.String(80), nullable = False, default = "student")
    edu_center_id = db.Column(db.Integer, db.ForeignKey('educenter.id'))
    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
+   email_confirm = db.Column(db.Boolean, default = False, index=True)
    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
 
 class Feedback(db.Model):

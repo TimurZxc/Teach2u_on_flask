@@ -30,23 +30,32 @@ def sign_in():
         edu_center = Educenter.query.filter_by(email=form.email.data).first()
         parent = Parent.query.filter_by(email=form.email.data).first()
         student = Student.query.filter_by(email=form.email.data).first()
-        if teacher and teacher.email_confirm == True:
+        if teacher and teacher.email_confirm:
             if teacher and bcrypt.check_password_hash(teacher.password, form.password.data):
                 sessiontype = 'Teacher'
                 login_user(teacher, remember=form.remember.data)
                 next_page = request.args.get('next')
                 return redirect(next_page) if next_page else redirect(url_for('home'))
-            elif edu_center and bcrypt.check_password_hash(edu_center.password, form.password.data):
+            else:
+                flash('Неверный логин или пароль! Попробуйте еще раз', 'danger')
+        elif edu_center and edu_center.email_confirm:
+            if edu_center and bcrypt.check_password_hash(edu_center.password, form.password.data):
                 sessiontype = 'EduCenter'
                 login_user(edu_center, remember=form.remember.data)
                 next_page = request.args.get('next')
                 return redirect(next_page) if next_page else redirect(url_for('home'))
-            elif parent and bcrypt.check_password_hash(parent.password, form.password.data):
+            else:
+                flash('Неверный логин или пароль! Попробуйте еще раз', 'danger')
+        elif parent and parent.email_confirm:
+            if parent and bcrypt.check_password_hash(parent.password, form.password.data):
                 sessiontype = 'Parent'
                 login_user(parent, remember=form.remember.data)
                 next_page = request.args.get('next')
                 return redirect(next_page) if next_page else redirect(url_for('home'))
-            elif student and bcrypt.check_password_hash(student.password, form.password.data):
+            else:
+                flash('Неверный логин или пароль! Попробуйте еще раз', 'danger')
+        elif student and student.email_confirm:
+            if student and bcrypt.check_password_hash(student.password, form.password.data):
                 sessiontype = 'Student'
                 login_user(student, remember=form.remember.data)
                 next_page = request.args.get('next')
@@ -91,7 +100,7 @@ def sign_up_teacher():
             mail.send(msg)
             db.session.add(teacher)
             db.session.commit()
-            flash(f'Ваш аккаунт успешно создан!, Подтвердите почту', 'success')
+            flash(f'Ваш аккаунт успешно создан! Подтвердите почту', 'success')
             return redirect(url_for('sign_in'))
  
     return render_template('sign-up-teacher.html', title='Sign-up', teacher_form=teacher_form)
@@ -118,7 +127,7 @@ def sign_up_parent():
         mail.send(msg)
         db.session.add(parent)
         db.session.commit()
-        flash(f'Ваш аккаунт успешно создан!', 'success')
+        flash(f'Ваш аккаунт успешно создан! Подтвердите почту', 'success')
         return redirect(url_for('sign_in'))
 
     return render_template('sign-up-parent.html', title='Sign-up', parent_form=parent_form)
@@ -148,7 +157,8 @@ def sign_up_student():
         mail.send(msg)
         db.session.add(student)
         db.session.commit()
-        flash(f'Ваш аккаунт успешно создан!', 'success')
+        flash(f'Ваш аккаунт успешно создан! Подтвердите почту', 'success')
+
         return redirect(url_for('sign_in'))
 
     return render_template('sign-up-student.html', title='Sign-up', student_form=student_form)
@@ -177,39 +187,70 @@ def edu_center_sign_up():
         mail.send(msg)
         db.session.add(edu_center)
         db.session.commit()
-        flash(f'Ваш аккаунт успешно создан!', 'success')
+        flash(f'Ваш аккаунт успешно создан! Подтвердите почту', 'success')
+
         return redirect(url_for('sign_in'))
 
     return render_template('edu_centers_sign_up.html', title='Sign-up', edu_center_form=edu_center_form)
 
 
-@app.route("/email_confirm/<token>")
-def email_confirm(token):
+@app.route("/email_confirm/<token>/<email>")
+def email_confirm(token, email):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
+        print(email)
         teacher = Teacher.query.filter_by(email=email).first()
         if teacher:
             teacher.email_confirm = True
             db.session.commit()
+            flash(f'Успех! Теперь вы можете войти на сайт.', 'success')
+
             return redirect(url_for('sign_in'))
         student = Student.query.filter_by(email=email).first()
         if student:
             student.email_confirm = True
             db.session.commit()
+            flash(f'Успех! Теперь вы можете войти на сайт.', 'success')
             return redirect(url_for('sign_in'))
         educenter = Educenter.query.filter_by(email=email).first()
         if educenter:
             educenter.email_confirm = True
             db.session.commit()
+            flash(f'Успех! Теперь вы можете войти на сайт.', 'success')
+        
             return redirect(url_for('sign_in'))
         parent = Parent.query.filter_by(email=email).first()
         if parent:
             parent.email_confirm = True
             db.session.commit()
+            flash(f'Успех! Теперь вы можете войти на сайт.', 'success')
+        
             return redirect(url_for('sign_in'))
     except SignatureExpired:
-        flash("Время выделенное на подтвеждение почты истекло! Пройдите регистрацию заново")
-        return redirect(url_for('sign_in'))
+        teacher = Teacher.query.filter_by(email=email).first()
+        if teacher:
+            db.session.delete(teacher)
+            db.session.commit()
+            flash("Время выделенное на подтвеждение почты истекло! Пройдите регистрацию заново.", 'danger')
+            return redirect(url_for('sign_up_student'))
+        student = Student.query.filter_by(email=email).first()
+        if student:
+            db.session.delete(student)
+            db.session.commit()
+            flash("Время выделенное на подтвеждение почты истекло! Пройдите регистрацию заново.", 'danger')
+            return redirect(url_for('sign_up_student'))
+        educenter = Educenter.query.filter_by(email=email).first()
+        if educenter:
+            db.session.delete(educenter)
+            db.session.commit()
+            flash("Время выделенное на подтвеждение почты истекло! Пройдите регистрацию заново.", 'danger')
+            return redirect(url_for('sign_up_student'))
+        parent = Parent.query.filter_by(email=email).first()
+        if parent:
+            db.session.delete(parent)
+            db.session.commit()
+            flash("Время выделенное на подтвеждение почты истекло! Пройдите регистрацию заново.", 'danger')
+            return redirect(url_for('sign_up_student'))
     return render_template("email_confirm.html", title='Email confirm')
 
 @app.route("/logout")
@@ -368,6 +409,7 @@ def generate_password_reset_token(email):
 
 def send_password_reset_email(email, token):
     msg = Message('Password Reset Request', 
+                  sender='teach2u.0000@gmail.com', 
                   sender='noreply@teach2u.kz', 
                   recipients=[email])
     msg.body = """Для сброса пароля нажмите на следующую ссылку:

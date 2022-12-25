@@ -3,6 +3,7 @@
 <div class="container py-5 h-100">
    <div class="row d-flex justify-content-center">
       {% for edu_center in edu_centers%}
+      {% if edu_center.email_confirm %}
       <div class="col-md-12 col-xl-4">
          <div class="card mt-3 mb-2" style="border-radius: 15px;">
             <div class="card-body text-center">
@@ -23,6 +24,7 @@
          </div>
 
       </div>
+      {% endif %}
       {% endfor %}
    </div>
 </div>
