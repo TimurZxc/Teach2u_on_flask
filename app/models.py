@@ -113,6 +113,7 @@ class Feedback(db.Model):
    rating = db.Column(db.Integer, nullable = False)
    feedback = db.Column(db.Text, nullable = False)
    teacher = relationship("Teacher",backref="feedback") 
+   sender_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
 
 
 

@@ -640,15 +640,12 @@ def rate(id):
         name = current_user.first_name + " " + current_user.last_name
         rating_obj = Feedback(teacher_id = id, name = name, rating=int(rating), feedback= form.description.data)
         
-        selfrate = db.session.query(Teacher).filter(and_(Teacher.id == id))
-        check = db.session.query(Feedback).filter(and_(Feedback.name == name, Feedback.teacher_id == id))
-        if selfrate:
-            flash("Вы не можете оставить отзыв самому себе.", "warning")
+        check = Feedback.query.filter(and_(Feedback.name == name, Feedback.teacher_id == id)).all()
+        print(check)
+        if check:
+            flash("Вы уже оставили отзыв данному преподавателю.", "warning")
         else:
-            if check:
-                flash("Вы уже оставили отзыв данному преподавателю.", "warning")
-            else:
-                db.session.add(rating_obj)
-                db.session.commit()
+            db.session.add(rating_obj)
+            db.session.commit()
         return redirect(url_for('user_page', teacher_id = id))
     return render_template('rate.html', form=form, feedbacks = feedback)
