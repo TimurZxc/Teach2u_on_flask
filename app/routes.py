@@ -4,7 +4,7 @@ from app.forms import LoginForm, ParentUpdateForm, RatingForm, ResetForm, SetPas
 from app.models import Feedback, Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
 from app import app, db, bcrypt, s, SignatureExpired, Message, mail
 from flask_login import login_user, current_user, logout_user, login_required
-from sqlalchemy import func
+from sqlalchemy import and_, func
 
 
 
@@ -410,7 +410,6 @@ def generate_password_reset_token(email):
 def send_password_reset_email(email, token):
     msg = Message('Password Reset Request', 
                   sender='teach2u.0000@gmail.com', 
-                  sender='noreply@teach2u.kz', 
                   recipients=[email])
     msg.body = """Для сброса пароля нажмите на следующую ссылку:
 {}
@@ -529,8 +528,9 @@ def user_page(teacher_id):
     print(rating)
     result = db.session.query(func.avg(Feedback.rating)).\
            filter_by(teacher_id=teacher_id).scalar()
-    
-    return render_template("user_page.html", user=current_user, subjects=subjects, rating=round(result, 2),)
+    if result is not None:
+        return render_template("user_page.html", user=current_user, subjects=subjects, rating= round(result, 2))
+    return render_template("user_page.html", user=current_user, subjects=subjects, rating= result)
 
 @app.route('/course_page/<course_id>', methods=['GET', 'POST'])
 @login_required
@@ -637,8 +637,18 @@ def rate(id):
 
     if request.method == "POST":
         rating = form.rating.data
-        rating_obj = Feedback(teacher_id = id, name = form.name.data, rating=int(rating), feedback= form.description.data)
-        db.session.add(rating_obj)
-        db.session.commit()
+        name = current_user.first_name + " " + current_user.last_name
+        rating_obj = Feedback(teacher_id = id, name = name, rating=int(rating), feedback= form.description.data)
+        
+        selfrate = db.session.query(Teacher).filter(and_(Teacher.id == id))
+        check = db.session.query(Feedback).filter(and_(Feedback.name == name, Feedback.teacher_id == id))
+        if selfrate:
+            flash("Вы не можете оставить отзыв самому себе.", "warning")
+        else:
+            if check:
+                flash("Вы уже оставили отзыв данному преподавателю.", "warning")
+            else:
+                db.session.add(rating_obj)
+                db.session.commit()
         return redirect(url_for('user_page', teacher_id = id))
     return render_template('rate.html', form=form, feedbacks = feedback)

@@ -8,8 +8,8 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'b982c2edf1a2f17e9e06c49fb027e8d1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:teach2udevs@database.crkzir4tx0cj.us-east-1.rds.amazonaws.com:5432/teach2u'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' #Сука если ты редачишь на локалке закоменти строку сверху и раскомменти эту
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:teach2udevs@database.crkzir4tx0cj.us-east-1.rds.amazonaws.com:5432/teach2u'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' #Сука если ты редачишь на локалке закоменти строку сверху и раскомменти эту
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG'] = False

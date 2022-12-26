@@ -29,9 +29,9 @@
             {% endfor %}
             {% if half_star %}
               <i class="fa fa-star-half-alt star"></i>
-            {% else %}
+            {% elif half_star == 0 %}
               <i class="fa fa-star star-empty"></i>
-            {% endif %}
+            {% endif %} 
             {% for i in range(empty_stars) %}
               <i class="fa fa-star star-empty"></i>
             {% endfor %}
