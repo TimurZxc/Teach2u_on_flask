@@ -1,5 +1,4 @@
 from flask import flash, redirect, render_template, session, url_for, request
-import jwt
 from app.forms import LoginForm, ParentUpdateForm, RatingForm, ResetForm, SetPasswordForm, StudentUpdateForm, TeacherRegistrationForm, SubjectForm, EduCenterRegistrationForm, CourseForm, EduTeacher, ParentForm, StudentForm, TeacherUpdateForm, EduCenterUpdateForm
 from app.models import Feedback, Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
 from app import app, db, bcrypt, s, SignatureExpired, Message, mail
