@@ -106,14 +106,14 @@ class Student(db.Model, UserMixin):
    email_confirm = db.Column(db.Boolean, default = False, index=True)
    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
 
-class Feedback(db.Model):
-   id = db.Column(db.Integer, primary_key = True)
-   teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
-   name = db.Column(db.String(80), nullable = False)
-   rating = db.Column(db.Integer, nullable = False)
-   feedback = db.Column(db.Text, nullable = False)
-   teacher = relationship("Teacher",backref="feedback") 
-   sender_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+# class Feedback(db.Model):
+#    id = db.Column(db.Integer, primary_key = True)
+#    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+#    name = db.Column(db.String(80), nullable = False)
+#    rating = db.Column(db.Integer, nullable = False)
+#    feedback = db.Column(db.Text, nullable = False)
+#    teacher = relationship("Teacher",backref="feedback") 
+#    sender_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
 
 
 

@@ -9,7 +9,7 @@
             <img src="{{ url_for('static', filename='img/default.jpg') }}" alt="avatar" class="rounded-circle img-fluid"
               style="width: 150px;">
             <h5 class="my-3"> {{ user.first_name }} {{ user.last_name }} </h5>
-            <style>
+            <!-- <style>
               .star {
                 color: orange;
               }
@@ -41,7 +41,7 @@
             {% else %}
             <p>Нет отзывов</p>
             {% endif %}
-            <a href="{{ url_for('rate', id = user.id) }}"  class="btn btn-primary">Оценить</a>
+            <a href="{{ url_for('rate', id = user.id) }}"  class="btn btn-primary">Оценить</a> -->
             <p class="text-muted mb-4">
               {{ user.phone_number }}<br />
               {{ user.email }}

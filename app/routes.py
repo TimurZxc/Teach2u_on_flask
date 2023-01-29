@@ -1,7 +1,6 @@
 from flask import flash, redirect, render_template, session, url_for, request
-import jwt
 from app.forms import LoginForm, ParentUpdateForm, RatingForm, ResetForm, SetPasswordForm, StudentUpdateForm, TeacherRegistrationForm, SubjectForm, EduCenterRegistrationForm, CourseForm, EduTeacher, ParentForm, StudentForm, TeacherUpdateForm, EduCenterUpdateForm
-from app.models import Feedback, Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
+from app.models import Teacher, Subject, Educenter, Courses, Eduteachers, Parent, Student
 from app import app, db, bcrypt, s, SignatureExpired, Message, mail
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import and_, func
@@ -524,13 +523,13 @@ def user_page(teacher_id):
     current_user = db.session.query(Teacher).filter(
         Teacher.id == teacher_id).first()
     subjects = db.session.query(Subject).filter_by(teacher_id=teacher_id)
-    rating = db.session.query(Feedback).filter_by(teacher_id=teacher_id)
-    print(rating)
-    result = db.session.query(func.avg(Feedback.rating)).\
-           filter_by(teacher_id=teacher_id).scalar()
-    if result is not None:
-        return render_template("user_page.html", user=current_user, subjects=subjects, rating= round(result, 2))
-    return render_template("user_page.html", user=current_user, subjects=subjects, rating= result)
+    # rating = db.session.query(Feedback).filter_by(teacher_id=teacher_id)
+    # print(rating)
+    # result = db.session.query(func.avg(Feedback.rating)).\
+        #    filter_by(teacher_id=teacher_id).scalar()
+    # if result is not None:
+    #     return render_template("user_page.html", user=current_user, subjects=subjects, rating= round(result, 2))
+    return render_template("user_page.html", user=current_user, subjects=subjects,) #rating= result)
 
 @app.route('/course_page/<course_id>', methods=['GET', 'POST'])
 @login_required
